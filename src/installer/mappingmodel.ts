@@ -19,7 +19,11 @@ export function mappingobj<T>(obj: T): T {
 
 export function mappingarray<T>(obj: T | T[]): T[] {
     if (Array.isArray(obj)) {
-        return obj.map(item => mappingarray(item)) as T[];
+        let result: T[] = [];
+        obj.forEach(item => {
+            result = result.concat(mappingarray(item));
+        });
+        return result;
     } else {
         const result: Partial<T> = {};
         if (obj !== null && typeof obj === 'object') {
@@ -33,4 +37,5 @@ export function mappingarray<T>(obj: T | T[]): T[] {
         return [result as T];
     }
 }
+
 

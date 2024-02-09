@@ -27,9 +27,7 @@ const status_connection = async (req:Request, res:Response, next:NextFunction) =
     try {
         // เชื่อมต่อกับฐานข้อมูลและทดสอบการเชื่อมต่อ
         await (await connection()).ping();
-        // หากสามารถเชื่อมต่อได้โดยไม่มีปัญหา
-        console.log({ connection: "database is connected"  });
-        
+        // หากสามารถเชื่อมต่อได้โดยไม่มีปัญหา        
         return next();
     } catch (error) {
         // หากเกิดข้อผิดพลาดในการเชื่อมต่อ

@@ -5,6 +5,6 @@ const userHandler = Router();
 
 userHandler.get("/users", userController.findall)
 userHandler.get("/user/:id", userController.findbypk)
-userHandler.get("/user/username/:username", userController.findLikeUsername)
+userHandler.get("/username/:username", userController.findLikeUsername)
 
 export default userHandler;
