@@ -4,7 +4,7 @@ import { User } from '../model/user';
 
 export const findAll = async ():Promise<User[]>  => {
     try {
-        const query: string = "SELECT * FROM Users;";
+        const query: string = "SELECT * FROM Users WHERE deleted_at IS NULL;";
         const [rows]: any = await (await connection()).query(query);
         return mappingarray<User>(rows);
     } catch (error) {
@@ -16,7 +16,7 @@ export const findAll = async ():Promise<User[]>  => {
 
 export const findByPk = async (id: number): Promise<User[]> => {
     try {
-        const query: string = "SELECT * FROM Users WHERE user_id = ?;";
+        const query: string = "SELECT * FROM Users WHERE user_id = ? AND deleted_at IS NULL;";
         const [rows]: any = await (await connection()).query(query, [id]);
         return mappingarray<User>(rows);
     } catch (error) {
@@ -28,7 +28,7 @@ export const findByPk = async (id: number): Promise<User[]> => {
 
 export const findUsername = async (username: string): Promise<User[]> => {
     try {
-        const query: string = "SELECT * FROM Users WHERE username = ?;";
+        const query: string = "SELECT * FROM Users WHERE username = ? AND deleted_at IS NULL;";
         const [rows] : any = await (await connection()).query(query, [username]);
         return mappingarray<User>(rows);
     } catch (error) {
@@ -40,7 +40,7 @@ export const findUsername = async (username: string): Promise<User[]> => {
 
 export const findLikeUsername = async (username: string): Promise<User[]> => {
     try {
-        const query: string = "SELECT * FROM Users WHERE username LIKE ?;";
+        const query: string = "SELECT * FROM Users WHERE username LIKE ? AND deleted_at IS NULL;";
         const [rows] : any = await (await connection()).query(query, [`%${username}%`]);
         return mappingarray<User>(rows);
     } catch (error) {
@@ -52,7 +52,7 @@ export const findLikeUsername = async (username: string): Promise<User[]> => {
 
 export const findEmail = async (email: string): Promise<User[]> => {
     try {
-        const query: string = "SELECT * FROM Users WHERE email = ?;";
+        const query: string = "SELECT * FROM Users WHERE email = ? AND deleted_at IS NULL;";
         const [rows]: any = await (await connection()).query(query, [email]);
         const array = mappingarray<User>(rows);        
         return array;
@@ -64,7 +64,7 @@ export const findEmail = async (email: string): Promise<User[]> => {
 
 export const findLikeEmail = async (email: string): Promise<User[]> => {
     try {
-        const query: string = "SELECT * FROM Users WHERE email LIKE ?;";
+        const query: string = "SELECT * FROM Users WHERE email LIKE ? AND deleted_at IS NULL;";
         const [rows]: any = await (await connection()).query(query, [`%${email}%`]);
         return mappingarray<User>(rows);
     } catch (error) {
@@ -77,10 +77,10 @@ export const findLikeEmail = async (email: string): Promise<User[]> => {
 export const Add = async (user:User): Promise<boolean> => {
     try {
         const query: string = `
-            INSERT INTO Users (user_id, username, email, password, phone, date_of_birth, line_id, profile_picture, created_at, updated_at)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+        INSERT INTO Users (user_id, username, email, password, phone, date_of_birth, line_id, profile_picture, created_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, GETDATE());`;
         const values = [user.user_id, user.username, user.email, user.password, user.phone, user.date_of_birth, user.line_id, 
-                        user.profile_picture, user.created_at, user.updated_at];
+                        user.profile_picture];
 
         const [rows]: any = await (await connection()).query(query, values);
 

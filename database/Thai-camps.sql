@@ -7,7 +7,8 @@ CREATE TABLE IF NOT EXISTS Owners (
     phone VARCHAR(20),
     profile_picture VARCHAR(255), -- รูปภาพโปรไฟล์ของเจ้าของห้อง
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMP DEFAULT NULL -- เพิ่มคอลัมน์สำหรับเก็บวันที่ลบข้อมูล
 );
 
 -- สร้างตาราง Locations (สถานที่)
@@ -23,6 +24,7 @@ CREATE TABLE IF NOT EXISTS Locations (
     latitude DECIMAL(10, 8), -- ละติจูด
     longitude DECIMAL(11, 8), -- ลองจิจูด
     owner_id INT, -- รหัสเจ้าของกิจการ
+    deleted_at TIMESTAMP DEFAULT NULL,
     FOREIGN KEY (owner_id) REFERENCES Owners(owner_id) -- เชื่อมโยงกับตาราง Owners
 );
 
@@ -42,6 +44,7 @@ CREATE TABLE IF NOT EXISTS Menus (
     price DECIMAL(10, 2), -- ราคา
     cost INT, -- ต้นทุน
     image_url VARCHAR(255), -- URL รูปภาพ
+    deleted_at TIMESTAMP DEFAULT NULL,
     is_reservation_allowed BOOLEAN DEFAULT FALSE, -- อนุญาตให้จองหรือไม่
     category_id INT, -- รหัสประเภทของเมนู
     FOREIGN KEY (category_id) REFERENCES MenuCategories(category_id),
@@ -60,7 +63,8 @@ CREATE TABLE IF NOT EXISTS Users (
     line_id VARCHAR(100),
     profile_picture VARCHAR(255), -- รูปโปรไฟล์
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMP DEFAULT NULL
 );
 
 -- สร้างตาราง Locations_Users (ผู้ดูแลสถานที่)
@@ -81,6 +85,7 @@ CREATE TABLE IF NOT EXISTS PostsUsers (
     image_url VARCHAR(255), -- URL รูปภาพ
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMP DEFAULT NULL,
     FOREIGN KEY (user_id) REFERENCES Users(user_id)
 );
 
@@ -91,6 +96,7 @@ CREATE TABLE IF NOT EXISTS CommentsUsers (
     user_id INT, -- รหัสผู้ใช้ที่แสดงความคิดเห็น
     content TEXT, -- เนื้อหาความคิดเห็น
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMP DEFAULT NULL,
     FOREIGN KEY (post_id) REFERENCES PostsUsers(post_id),
     FOREIGN KEY (user_id) REFERENCES Users(user_id)
 );
@@ -101,6 +107,7 @@ CREATE TABLE IF NOT EXISTS LikesUsers (
     post_id INT, -- รหัสโพสต์
     user_id INT, -- รหัสผู้ใช้ที่กดไลค์
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMP DEFAULT NULL,
     FOREIGN KEY (post_id) REFERENCES PostsUsers(post_id),
     FOREIGN KEY (user_id) REFERENCES Users(user_id)
 );
@@ -115,6 +122,7 @@ CREATE TABLE IF NOT EXISTS Rooms (
     status ENUM('Available', 'Occupied', 'Out of Service') DEFAULT 'Available', -- สถานะ
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMP DEFAULT NULL,
     FOREIGN KEY (location_id) REFERENCES Locations(location_id) -- เชื่อมโยงกับตาราง Locations
 );
 
@@ -156,6 +164,7 @@ CREATE TABLE IF NOT EXISTS Posts (
     image_url VARCHAR(255), -- URL รูปภาพ
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMP DEFAULT NULL,
     FOREIGN KEY (owner_id) REFERENCES Owners(owner_id)
 );
 
@@ -166,6 +175,7 @@ CREATE TABLE IF NOT EXISTS Comments (
     user_id INT, -- รหัสผู้ใช้ที่แสดงความคิดเห็น
     content TEXT, -- เนื้อหาความคิดเห็น
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMP DEFAULT NULL,
     FOREIGN KEY (post_id) REFERENCES Posts(post_id),
     FOREIGN KEY (user_id) REFERENCES Users(user_id)
 );
@@ -174,10 +184,11 @@ CREATE TABLE IF NOT EXISTS Comments (
 CREATE TABLE IF NOT EXISTS Likes (
     like_id INT AUTO_INCREMENT PRIMARY KEY,
     post_id INT, -- รหัสโพสต์
-    user_id INT, -- รหัสผู้ใช้ที่กดไลค์
+    owner_id INT, -- รหัสผู้ใช้ที่กดไลค์
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMP DEFAULT NULL,
     FOREIGN KEY (post_id) REFERENCES Posts(post_id),
-    FOREIGN KEY (user_id) REFERENCES Users(user_id)
+    FOREIGN KEY (owner_id) REFERENCES Owners(owner_id)
 );
 
 -- สร้างตาราง Follows (การติดตาม)
@@ -186,6 +197,7 @@ CREATE TABLE IF NOT EXISTS Follows (
     user_id INT, -- รหัสผู้ใช้
     location_id INT, -- รหัสสถานที่
     follow_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- วันที่เริ่มติดตาม
+    deleted_at TIMESTAMP DEFAULT NULL,
     FOREIGN KEY (user_id) REFERENCES Users(user_id),
     FOREIGN KEY (location_id) REFERENCES Locations(location_id)
 );
@@ -200,6 +212,7 @@ CREATE TABLE IF NOT EXISTS Advertisers (
     phone_number VARCHAR(20), -- เบอร์โทรศัพท์
     website VARCHAR(255), -- เว็บไซต์
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- วันที่สร้างบัญชี
+    deleted_at TIMESTAMP DEFAULT NULL,
     FOREIGN KEY (user_id) REFERENCES Users(user_id)
 );
 
@@ -213,6 +226,7 @@ CREATE TABLE IF NOT EXISTS PackagesAdvertisers (
     price DECIMAL(10, 2) NOT NULL, -- ราคา
     duration INT NOT NULL, -- ระยะเวลา (เช่น 30 วัน)
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- วันที่สร้างแพ็คเกจ
+    deleted_at TIMESTAMP DEFAULT NULL,
     advertiser_id INT, -- รหัสผู้โฆษณา
     FOREIGN KEY (advertiser_id) REFERENCES Advertisers(advertiser_id)
 );
@@ -225,6 +239,7 @@ CREATE TABLE IF NOT EXISTS PackagesOwners (
     price DECIMAL(10, 2) NOT NULL, -- ราคา
     duration INT NOT NULL, -- ระยะเวลา (เช่น 30 วัน)
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- วันที่สร้างแพ็คเกจ
+    deleted_at TIMESTAMP DEFAULT NULL,
     advertiser_id INT, -- รหัสผู้โฆษณา
     FOREIGN KEY (advertiser_id) REFERENCES Advertisers(advertiser_id)
 );
@@ -253,5 +268,6 @@ CREATE TABLE IF NOT EXISTS PaymentStatus (
     status_id INT AUTO_INCREMENT PRIMARY KEY,
     status_name VARCHAR(50) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- วันที่ชำระ
+    deleted_at TIMESTAMP DEFAULT NULL,
     status ENUM('Pending', 'Paid', 'Completed') DEFAULT 'Pending' -- สถานะการชำระเงิน
 );

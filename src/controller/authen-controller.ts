@@ -21,6 +21,9 @@ export const loginSystem = async (req: Request, res:Response) => {
     {
         if(typeof tokenresponse.user !== "undefined")
         {
+            // Clear ค่า เก่า
+            res.clearCookie(tokenresponse.user[0].username); 
+            // Add ค่าใหม่
             res.cookie(tokenresponse.user[0].username, tokenresponse.token || "", { httpOnly: true, maxAge: 3 * 24 * 60 * 60 * 1000 });
             res.status(200).json(tokenresponse)
         }

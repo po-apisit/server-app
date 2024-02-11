@@ -104,5 +104,3 @@ export const Register = async (user: User): Promise<TokenResponse> => {
         return response;
     }
 }
-
-export const Loout = (token:string, res:Response):boolean => deleteTokenFromCookie(token, res);

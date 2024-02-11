@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { User } from '../model/user';
 import dotenv from 'dotenv';
+import { OK } from './instant';
 
 dotenv.config();
 
@@ -32,8 +33,8 @@ export const authenticateToken = (req: Request, res: Response, next: NextFunctio
             return res.sendStatus(403); // Forbidden หาก token ไม่ถูกต้อง
         }
         const userId = decoded.clientReason; // ดึง user_id จาก decoded token
+
         const userCookie = req.cookies[userId]; // ดึงคุกกี้ของ user_id จากคุกกี้ที่บันทึกไว้
-        console.log(userCookie);
         
         if (!userCookie || userCookie !== token) {
             return res.sendStatus(401); // Unauthorized หากคุกกี้ไม่ตรงกับ token
@@ -46,7 +47,7 @@ export const authenticateToken = (req: Request, res: Response, next: NextFunctio
 export const deleteTokenFromCookie = (req: Request, res: Response) => {
 
     const authHeader = req.headers['authorization'] as string;
-    
+
     if (!authHeader) {
         return res.sendStatus(401); // Unauthorized หากไม่มี header Authorization
     }
@@ -56,19 +57,16 @@ export const deleteTokenFromCookie = (req: Request, res: Response) => {
     if (!token) {
         return res.sendStatus(401); // Unauthorized หากไม่มี token
     }
-
+    
     jwt.verify(token, process.env.JWT_SECRETKEY || "jwt", (err: any, decoded: any) => {
         
         if (err) {
             return res.sendStatus(403); // Forbidden หาก token ไม่ถูกต้อง
         }
-        
-        
-        const userId = decoded.clientReason; // ดึง user_id จาก decoded token
-        console.log(userId);
-        const  reuslt = res.clearCookie(userId);
 
-        return res.status(200)
+        const userId = decoded.clientReason; // ดึง user_id จาก decoded token
+         res.clearCookie(userId);
+        return res.status(200).json({ result:OK, message:"Logout success" })
     })
 };
 
