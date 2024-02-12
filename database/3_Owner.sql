@@ -134,3 +134,21 @@ CREATE TABLE IF NOT EXISTS TB_LIKE_COMMENT_OWNER_POST
     FOREIGN KEY (id_emoji) REFERENCES TB_EMOJI (id_emoji),
     FOREIGN KEY (id_comment_owner_post) REFERENCES TB_COMMENT_OWNER_POST (id_comment_owner_post)
 );
+
+
+
+-- Promotion
+CREATE TABLE IF NOT EXISTS TB_OWNER_PROMOTION_MANAGE
+(
+    id_owner_promotion INT AUTO_INCREMENT PRIMARY KEY,
+    id_payment VARCHAR(50),
+    id_owner INT,
+    start_date DATE,
+    end_date DATE,
+    price INT,
+    post_picture VARCHAR(100) NOT NULL, -- รูปโพส
+    post_picture_convert VARCHAR(50) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMP DEFAULT NULL,
+);

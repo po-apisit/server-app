@@ -94,7 +94,7 @@ CREATE TABLE IF NOT EXISTS TB_USER_POST
     post_picture_convert VARCHAR(500) NOT NULL,
     post_video VARCHAR(100) NOT NULL, -- วีดีโอโพส
     post_video_convert VARCHAR(500) NOT NULL,
-    public BOOLEAN DEFAULT TRUE,
+       BOOLEAN DEFAULT TRUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     deleted_at TIMESTAMP DEFAULT NULL, -- เพิ่มคอลัมน์สำหรับเก็บวันที่ลบข้อมูล
