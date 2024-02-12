@@ -78,7 +78,7 @@ export const Add = async (user:User): Promise<boolean> => {
     try {
         const query: string = `
         INSERT INTO Users (user_id, username, email, password, phone, date_of_birth, line_id, profile_picture, created_at)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, GETDATE());`;
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW());`;
         const values = [user.user_id, user.username, user.email, user.password, user.phone, user.date_of_birth, user.line_id, 
                         user.profile_picture];
 
