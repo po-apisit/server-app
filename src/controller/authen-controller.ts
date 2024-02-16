@@ -13,7 +13,7 @@ export const register = async (req: Request, res:Response) => {
     res.json(tokenresponse);
 }
 
-export const loginSystem = async (req: Request, res:Response) => {
+export const loginSystem = async (req: Request, res:Response) => {    
     const client:User = mappingobj<User>(req.body);
     const tokenresponse:TokenResponse = await authenService.LoginSystem(client);
     
@@ -23,6 +23,7 @@ export const loginSystem = async (req: Request, res:Response) => {
         {
             // Clear ค่า เก่า
             res.clearCookie(tokenresponse.user[0].username); 
+            
             // Add ค่าใหม่
             res.cookie(tokenresponse.user[0].username, tokenresponse.token || "", { httpOnly: true, maxAge: 3 * 24 * 60 * 60 * 1000 });
             res.status(200).json(tokenresponse)
