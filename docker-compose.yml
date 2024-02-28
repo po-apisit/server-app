@@ -1,30 +1,30 @@
 version: '3.3'
 
 services:
-  mysql:
-    image: mysql
-    command: --default-authentication-plugin=mysql_native_password
-    container_name: mysql
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: p@ssw0rd
-      MYSQL_DATABASE: DB_TEST
-      MYSQL_USER: rootapisit
-      MYSQL_PASSWORD: p@ssw0rd
-    ports:
-      - 3306:3306
-    networks:
-      - application
+  # mysql:
+  #   image: mysql
+  #   command: --default-authentication-plugin=mysql_native_password
+  #   container_name: mysql
+  #   restart: always
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: p@ssw0rd
+  #     MYSQL_DATABASE: DB_TEST
+  #     MYSQL_USER: rootapisit
+  #     MYSQL_PASSWORD: p@ssw0rd
+  #   ports:
+  #     - 3306:3306
+  #   networks:
+  #     - application
 
-  phpmyadmin:
-    image: phpmyadmin
-    restart: always
-    ports:
-      - 8080:80
-    environment:
-      PMA_HOST: mysql
-    networks:
-      - application
+  # phpmyadmin:
+  #   image: phpmyadmin
+  #   restart: always
+  #   ports:
+  #     - 8080:80
+  #   environment:
+  #     PMA_HOST: mysql
+  #   networks:
+  #     - application
 
   web-api:
     image: web-app
