@@ -38,11 +38,11 @@ services:
       NODE_ENV: production
     ports:
       - 122:4000
-    depends_on:
-      - mysql
-    networks:
-      - application
+#     depends_on:
+#       - mysql
+#     networks:
+#       - application
 
-networks:
-  application:
-    driver: bridge
+# networks:
+#   application:
+#     driver: bridge
