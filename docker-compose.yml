@@ -1,28 +1,28 @@
 version: '3.3'
 
 services:
-  # mysql:
-  #   image: mysql
-  #   command: --default-authentication-plugin=mysql_native_password
-  #   container_name: mysql
-  #   restart: always
-  #   environment:
-  #     MYSQL_ROOT_PASSWORD: p@ssw0rd1112234
-  #     MYSQL_DATABASE: DB_THAI_CAMPS
-  #   ports:
-  #     - 3306:3306
-  #   networks:
-  #     - application
+  mysql:
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    container_name: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: p@ssw0rd1112234
+      MYSQL_DATABASE: DB_THAI_CAMPS
+    ports:
+      - 112:3306
+    networks:
+      - application
 
-  # phpmyadmin:
-  #   image: phpmyadmin
-  #   restart: always
-  #   ports:
-  #     - 8080:80
-  #   environment:
-  #     PMA_HOST: mysql
-  #   networks:
-  #     - application
+  phpmyadmin:
+    image: phpmyadmin
+    restart: always
+    ports:
+      - 8080:80
+    environment:
+      PMA_HOST: mysql
+    networks:
+      - application
 
   web-api:
     image: web-app
@@ -30,19 +30,19 @@ services:
     container_name: web-app
     build: .
     environment:
-      DB_HOST: 212.80.215.208
-      DB_PORT: 3306
+      DB_HOST: mysql
+      DB_PORT: 112
       DB_USER: root
       DB_PASSWORD: p@ssw0rd1112234
       DB_DATABASE: DB_THAI_CAMPS
       NODE_ENV: production
     ports:
       - 122:4000
-#     depends_on:
-#       - mysql
-#     networks:
-#       - application
+    depends_on:
+      - mysql
+    networks:
+      - application
 
-# networks:
-#   application:
-#     driver: bridge
+networks:
+  application:
+    driver: bridge
