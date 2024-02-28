@@ -32,9 +32,9 @@ services:
     environment:
       DB_HOST: mysql
       DB_PORT: 3306
-      DB_USER: rootapisit
-      DB_PASSWORD: p@ssw0rd
-      DB_DATABASE: DB_TEST
+      DB_USER: root
+      DB_PASSWORD: p@ssw0rd1112234
+      DB_DATABASE: DB_THAI_CAMPS
       NODE_ENV: production
     ports:
       - 122:4000
